@@ -13,7 +13,7 @@ public class World : MonoBehaviour
     public Material material;
     public BlockType[] blockTypes;
 
-    Chunk[,] chunk = new Chunk[VoxelData.WorldSizeInChunks, VoxelData.WorldSizeInChunks];
+    Chunk[,] chunks = new Chunk[VoxelData.WorldSizeInChunks, VoxelData.WorldSizeInChunks];
 
     List<ChunkCoord> activeChunks = new List<ChunkCoord>();
     ChunkCoord playerLastChunkCoord;
@@ -60,7 +60,7 @@ public class World : MonoBehaviour
         {
             for (int z = (VoxelData.WorldSizeInChunks / 2) - VoxelData.ViewDistanceInChunks; z < (VoxelData.WorldSizeInChunks / 2) + VoxelData.ViewDistanceInChunks; z++)
             {
-                chunk[x, z] = new Chunk(new ChunkCoord(x, z), this, true);
+                chunks[x, z] = new Chunk(new ChunkCoord(x, z), this, true);
                 activeChunks.Add(new ChunkCoord(x, z)); 
             }
         }
@@ -74,7 +74,7 @@ public class World : MonoBehaviour
 
         while(chunksToCreate.Count > 0)
         {
-            chunk[chunksToCreate[0].x, chunksToCreate[0].z].Init();
+            chunks[chunksToCreate[0].x, chunksToCreate[0].z].Init();
             chunksToCreate.RemoveAt(0);
             yield return null;
         }
@@ -88,6 +88,13 @@ public class World : MonoBehaviour
         int z = Mathf.FloorToInt(pos.z / VoxelData.ChunkWidth);
 
         return new ChunkCoord(x, z);
+    }
+    public Chunk GetChunkFromVector3(Vector3 pos)
+    {
+        int x = Mathf.FloorToInt(pos.x / VoxelData.ChunkWidth);
+        int z = Mathf.FloorToInt(pos.z / VoxelData.ChunkWidth);
+
+        return chunks[x, z];
     }
 
     void CheckViewDistance()
@@ -104,14 +111,14 @@ public class World : MonoBehaviour
             {
                 if (IsChunkInWorld(new ChunkCoord(x,z)))
                 {
-                    if(chunk[x, z] == null)
+                    if(chunks[x, z] == null)
                     {
-                        chunk[x, z] = new Chunk(new ChunkCoord(x, z), this, false);
+                        chunks[x, z] = new Chunk(new ChunkCoord(x, z), this, false);
                         chunksToCreate.Add(new ChunkCoord(x,z));
                     }
-                    else if(!chunk[x, z].IsActive)
+                    else if(!chunks[x, z].IsActive)
                     {
-                        chunk[x, z].IsActive = true;    
+                        chunks[x, z].IsActive = true;    
                         activeChunks.Add(new ChunkCoord(x,z));  
                     }
                     activeChunks.Add(new ChunkCoord(x,z));
@@ -129,7 +136,7 @@ public class World : MonoBehaviour
 
         foreach(ChunkCoord c in previouslyActiveChunks)
         {
-            chunk[c.x, c.z].IsActive = false;
+            chunks[c.x, c.z].IsActive = false;
         }
     }
 
@@ -142,9 +149,9 @@ public class World : MonoBehaviour
             return false;
         }
 
-        if(chunk[thisChunk.x, thisChunk.z] != null && chunk[thisChunk.x, thisChunk.z].isVoxelMapPopulated)
+        if(chunks[thisChunk.x, thisChunk.z] != null && chunks[thisChunk.x, thisChunk.z].isVoxelMapPopulated)
         {
-            return blockTypes[chunk[thisChunk.x, thisChunk.z].GetVoxelFromGlobalVector3(pos)].isSolid;  
+            return blockTypes[chunks[thisChunk.x, thisChunk.z].GetVoxelFromGlobalVector3(pos)].isSolid;  
         }
 
         return blockTypes[GetVoxel(pos)].isSolid;
@@ -233,6 +240,7 @@ public class BlockType
 {
     public string BlockName;
     public bool isSolid;
+    public Sprite icon;
 
     [Header("Texture Values")]
     public int backFaceTexture;
