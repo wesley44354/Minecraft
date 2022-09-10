@@ -3,61 +3,65 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ToolBar : MonoBehaviour
+public class Toolbar : MonoBehaviour
 {
+
     World world;
     public Player player;
 
-    public RectTransform highLight;
+    public RectTransform highlight;
     public ItemSlot[] itemSlots;
 
     int slotIndex = 0;
 
     private void Start()
     {
+
         world = GameObject.Find("World").GetComponent<World>();
 
-        foreach(ItemSlot slot in itemSlots)
+        foreach (ItemSlot slot in itemSlots)
         {
-            slot.icon.sprite = world.blockTypes[slot.itemID].icon;
+
+            slot.icon.sprite = world.blocktypes[slot.itemID].icon;
             slot.icon.enabled = true;
+
         }
+
     }
 
     private void Update()
     {
-        float scroll = Input.GetAxisRaw("Mouse ScrollWheel");
 
-        if(scroll != 0)
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+
+        if (scroll != 0)
         {
-            if(scroll > 0)
-            {
+
+            if (scroll > 0)
                 slotIndex--;
-            }
             else
-            {
                 slotIndex++;
-            }
 
-            if(slotIndex > itemSlots.Length - 1)
-            {
+            if (slotIndex > itemSlots.Length - 1)
                 slotIndex = 0;
-            }
-
-            if(slotIndex < 0)
-            {
+            if (slotIndex < 0)
                 slotIndex = itemSlots.Length - 1;
-            }
 
-            highLight.position = itemSlots[slotIndex].icon.transform.position;
+            highlight.position = itemSlots[slotIndex].icon.transform.position;
             player.selectedBlockIndex = itemSlots[slotIndex].itemID;
+
         }
+
+
     }
+
 }
 
 [System.Serializable]
 public class ItemSlot
 {
+
     public byte itemID;
     public Image icon;
+
 }
