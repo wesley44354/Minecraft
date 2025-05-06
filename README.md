@@ -1,12 +1,14 @@
-# Minecraft
+# 🧱 Minecraft (Clone)
 
+> Projeto desenvolvido em **Unity 3D** utilizando **C#**, inspirado em Minecraft. O objetivo foi estudar a criação de mundos blocados, geração de terrenos e mecânicas básicas como movimentação e construção.
 
-## 🧑🏽‍💻 Tecnologias:
+---
 
--C#
--Unity 3D
+## 🧑🏽‍💻 Tecnologias Utilizadas
 
-## 💙 Contato:
-  > ✉️  wesleyalvesdeveloper99@gmail.com
+- C#  
+- Unity 3D  
 
-  > 📞  5567998887913
+---
+
+## 💙 Contato
